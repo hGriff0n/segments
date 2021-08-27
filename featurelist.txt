@@ -1,0 +1,5 @@
+Display segments on 3d map
+Display information on segments on hover (maybe have clickable icons)
+Display pop out of segments indicating more detailed information (ala veloviewer?)
+Be able to display gradient as a coloring
+Create route between segments

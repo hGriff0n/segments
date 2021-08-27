@@ -1,7 +1,8 @@
-<div class="container">
-  <h1 class="title">
-    {{ 'PAGES.HOME.TITLE' | translate }}
-  </h1>
-
-  <a routerLink="/detail">{{ 'PAGES.HOME.GO_TO_DETAIL' | translate }}</a>
+<div class="container" style="height:100%; width:100%;"><mgl-map
+    [style]="'mapbox://styles/hgriff0n/ckstievsb47cm18o483uw47si'"
+    [zoom]="[9]"
+    [center]="[-74.5, 40]"
+    [interactive]="true"
+    (mapLoad)="onLoad($event)"
+  ></mgl-map>
 </div>

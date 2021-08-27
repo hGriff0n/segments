@@ -14,4 +14,9 @@ export class HomeComponent implements OnInit {
     console.log('HomeComponent INIT');
   }
 
+  onLoad(event) {
+    console.log("Loaded");
+    console.log(event);
+    event.resize();
+  }
 }
