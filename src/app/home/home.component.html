@@ -1,7 +1,7 @@
 <div class="container" style="height:100%; width:100%;"><mgl-map
     [style]="'mapbox://styles/hgriff0n/ckstievsb47cm18o483uw47si'"
-    [zoom]="[9]"
-    [center]="[-74.5, 40]"
+    [zoom]="zoom"
+    [center]="location"
     [interactive]="true"
     (mapLoad)="onLoad($event)"
   ></mgl-map>

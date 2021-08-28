@@ -5,8 +5,6 @@ Be able to display gradient as a coloring
 Create route between segments
 
 PLAN:
-trim fat
-focus map on pittsburgh
 display set path
 attach 3d marker to path
 attach hover behavior to marker
