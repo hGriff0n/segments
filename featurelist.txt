@@ -3,12 +3,13 @@ Display information on segments on hover (maybe have clickable icons)
 Display pop out of segments indicating more detailed information (ala veloviewer?)
 Be able to display gradient as a coloring
 Create route between segments
+Route collections?
+  will likely need to figure out strava oauth
 
 PLAN:
-display set path
+"organize" path displaying process
 attach 3d marker to path
 attach hover behavior to marker
-get paths from strava data
 create paths on map
 work on getting ui as desired
 -- plan next steps
