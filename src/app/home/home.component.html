@@ -4,6 +4,10 @@
     [zoom]="zoom"
     [center]="location"
     [interactive]="true"
+    [maxZoom]=16
     (mapLoad)="onLoad($event)"
-  ></mgl-map>
+  >
+    <!-- <mgl-layer *ngFor="let segment of starredSegments | async"></mgl-layer> -->
+    <!-- < -->
+  </mgl-map>
 </div>

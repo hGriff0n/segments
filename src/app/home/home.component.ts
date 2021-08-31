@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Map } from 'mapbox-gl';
 import * as polyline from '@mapbox/polyline';
-import { Strava, SummarySegment } from 'strava';
+import { Strava, SummarySegment, DetailedSegment } from 'strava';
 
 @Component({
   selector: 'app-home',
@@ -26,9 +26,67 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  // mgl-layer
-  // mgl-geojson-source
-  getLocation(): void{
+  onLoad(event: Map) {
+    this.map = event;
+    this.map.resize();
+
+    // Load all of the starred segments and render them on the map
+    // Use `Promise.all` to parallelize the network calls
+    (async () => {
+      var segments = [];
+      for (var starred of await this.starredSegments()) {
+        segments.push(this.getSegment(starred.id).then(segment => {
+          this.paintSegment("" + segment.id, segment.map.polyline);
+        }));
+      }
+
+      try {
+        await Promise.all(segments);
+      } catch (error) {
+        console.log(error)
+      }
+    })();
+
+    // TODO: Add "floating" markers to segments (assign to source 'markers')
+    // this.map.on('mouseenter', 'markers', e => this.displayMiniPopup(e));
+    // this.map.on('mouseleave', 'markers', e => this.closeMiniPopup(e));
+    // this.map.on('click', 'markers', e => this.displayDetailedPopup(e));
+  }
+
+  // Would be potentially beneficial to use mgl-layer and mgl-geojson-source
+  // but that might make some things more difficult so leaving as-is for now
+  private paintSegment(id: string, segment_polyline: string) {
+    const line: GeoJSON.LineString = polyline.toGeoJSON(segment_polyline);
+    this.map.addSource(id, { type: 'geojson', data: { type: 'Feature', properties: {}, geometry: line } });
+    this.map.addLayer({
+      id: id,
+      type: 'line',
+      source: id,
+      layout: { 'line-join': 'round', 'line-cap': 'round' },
+      paint: { 'line-color': '#EE4B2B', 'line-width': [
+        'interpolate',
+        ['exponential', 2],
+        ['zoom'],
+        0, ["*", 12, ["^", 2, -6]],
+        24, ["*", 12, ["^", 2, 8]]
+    ],
+ }
+    });
+  }
+
+  private async starredSegments(): Promise<SummarySegment[]> {
+    return this.strava.segments.getLoggedInAthleteStarredSegments({});
+  }
+
+  private async getSegment(id: number): Promise<DetailedSegment> {
+    return this.strava.segments.getSegmentById({id: id});
+  }
+
+  private displayMiniPopup(e) {}
+  private closeMiniPopup(e) {}
+  private displayDetailedPopup(e) {}
+
+  private getLocation(): void{
     // Mapbox Geolocate Control?
     if (navigator.geolocation) {
       // Possible to do before load?
@@ -39,35 +97,5 @@ export class HomeComponent implements OnInit {
     } else {
        console.log("No support for geolocation")
     }
-  }
-
-  paintSegment(id: string, segment_polyline: string) {
-    const line: GeoJSON.LineString = polyline.toGeoJSON(segment_polyline);
-    this.map.addSource(id, { type: 'geojson', data: { type: 'Feature', properties: {}, geometry: line } });
-    this.map.addLayer({
-      id: id,
-      type: 'line',
-      source: id,
-      layout: { 'line-join': 'round', 'line-cap': 'round' },
-      paint: { 'line-color': '#EE4B2B', 'line-width': 8 }
-    });
-  }
-
-  onLoad(event: Map) {
-    this.map = event;
-    this.map.resize();
-
-    (async () => {
-      try {
-        const activities = await this.strava.segments.getLoggedInAthleteStarredSegments({});
-        const segment = await this.strava.segments.getSegmentById({id: 5158765});
-        this.paintSegment("" + segment.id, segment.map.polyline);
-        console.log(activities)
-        console.log(segment);
-
-      } catch (error) {
-        console.log(error)
-      }
-    })();
   }
 }
