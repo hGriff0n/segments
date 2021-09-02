@@ -1,5 +1,5 @@
 X Display segments on 3d map
-Display information on segments on hover (maybe have clickable icons)
+~ Display information on segments on hover (maybe have clickable icons)
 Display pop out of segments indicating more detailed information (ala veloviewer?)
 ~ Be able to display gradient as a coloring
 Create route between segments
@@ -8,7 +8,8 @@ Route collections?
 
 PLAN:
 attach 3d marker to path
-attach hover behavior to marker
 create paths on map
 work on getting ui as desired
+  improve hover behavior (embellish line, add info)
+  add expanded click view
 -- plan next steps

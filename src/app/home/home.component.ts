@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Map, Popup } from 'mapbox-gl';
+import { Map, Marker, Popup } from 'mapbox-gl';
 import * as polyline from '@mapbox/polyline';
 import { Strava, SummarySegment, DetailedSegment } from 'strava';
 
@@ -12,20 +12,23 @@ import { Strava, SummarySegment, DetailedSegment } from 'strava';
 export class HomeComponent implements OnInit {
   location: [number, number] = [0, 0];
   zoom: [number] = [9];
-  map: Map;
+
   strava: Strava;
+
+  map: Map;
   popup: Popup;
 
-  constructor(private router: Router) { }
-
-  ngOnInit(): void {
+  constructor(private router: Router) {
     this.getLocation();
     this.strava = new Strava({
       client_id: '69847',
       client_secret: 'e27db3aebb572370faf8bdc3acc1e0aae016d622',
       refresh_token: '7511a603ab56d2772550c0b11f51a80e3dc3ab33 ',
     });
-    this.popup = new Popup({closeButton: false, closeOnClick: true, closeOnMove: true });
+    this.popup = new Popup({ closeButton: false, closeOnClick: true, closeOnMove: true });
+  }
+
+  ngOnInit(): void {
   }
 
   onLoad(event: Map) {
@@ -84,13 +87,35 @@ export class HomeComponent implements OnInit {
     this.map.on('mouseenter', id, (e) => {
       this.map.getCanvas().style.cursor = 'pointer';
       this.popup.setLngLat(e.lngLat).setHTML(this.formatPopup(segment)).addTo(this.map);
-      console.log("Scrolled over " + id);
-      console.log(e)
+
+      // Temporarilly boost up the line width to emphasise the hovered line
+      var former_width = this.map.getPaintProperty(id, 'line-width');
+      former_width[4][1] += 5;
+      former_width[6][1] += 5;
+      this.map.setPaintProperty(id, 'line-width', former_width);
     });
     this.map.on('mouseleave', id, (e) => {
       this.map.getCanvas().style.cursor = '';
       this.popup.remove();
+
+      // Remove temporary emphasis
+      var former_width = this.map.getPaintProperty(id, 'line-width');
+      former_width[4][1] -= 5;
+      former_width[6][1] -= 5;
+      this.map.setPaintProperty(id, 'line-width', former_width);
     });
+
+    // TODO: Marker not displaying
+    // try geojson point layer?
+    // let [x, y] = segment.start_latlng;
+    // console.log("Add marker at " + x + ", " + y);
+    // new Marker({
+    //   color: 'red',
+    //   scale: 0.8,
+    //   draggable: false,
+    //   pitchAlignment: 'auto',
+    //   rotationAlignment: 'auto' }).setLngLat([x, y]).addTo(this.map);
+
   }
 
   // TODO: Format popup with useful information
