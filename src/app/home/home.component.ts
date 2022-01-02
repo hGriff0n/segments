@@ -38,20 +38,20 @@ export class HomeComponent implements OnInit {
 
     // Load all of the starred segments and render them on the map
     // Use `Promise.all` to parallelize the network calls
-    (async () => {
-      var segments = [];
-      for (var starred of await this.starredSegments()) {
-        segments.push(this.getSegment(starred.id).then(segment => {
-          this.paintSegment(segment);
-        }));
-      }
+    // (async () => {
+    //   var segments = [];
+    //   for (var starred of await this.starredSegments()) {
+    //     segments.push(this.getSegment(starred.id).then(segment => {
+    //       this.paintSegment(segment);
+    //     }));
+    //   }
 
-      try {
-        await Promise.all(segments);
-      } catch (error) {
-        console.log(error)
-      }
-    })();
+    //   try {
+    //     await Promise.all(segments);
+    //   } catch (error) {
+    //     console.log(error)
+    //   }
+    // })();
 
     // TODO: Add "floating" markers to segments (assign to source 'markers')
     // this.map.on('mouseenter', 'markers', e => this.displayMiniPopup(e));

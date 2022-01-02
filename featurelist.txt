@@ -13,3 +13,10 @@ work on getting ui as desired
   improve hover behavior (embellish line, add info)
   add expanded click view
 -- plan next steps
+
+electron:serve doesn't work for some reason
+
+REWORK APP
+More full featured route storage/planning functionality
+Better strava activity/segment functionality
+Zwift/VR Integration?
